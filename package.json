@@ -8,16 +8,32 @@
     "dev:auth": "pnpm --filter auth-service start:dev",
     "dev:core": "pnpm --filter core-service start:dev",
     "dev:doc": "pnpm --filter document-service start:dev",
-    "build:all": "pnpm -r build",
+    "dev:all": "concurrently \"pnpm dev:auth\" \"pnpm dev:core\" \"pnpm dev:doc\" \"pnpm dev:gateway\"",
+    
+    "build:all": "pnpm -r --parallel run build",
+    "build:auth": "pnpm --filter auth-service build",
+    "build:core": "pnpm --filter core-service build",
+    "build:doc": "pnpm --filter document-service build",
+    "build:gateway": "pnpm --filter api-gateway build",
+
+    "start:gateway": "cd apps/api-gateway && node ../../dist/apps/api-gateway/main.js",
+    "start:auth": "node apps/auth-service/dist/apps/auth-service/src/main.js",
+    "start:core": "node apps/core-service/dist/apps/core-service/src/main.js",
+    "start:doc": "node apps/document-service/dist/apps/document-service/src/main.js",
+    "start:all": "concurrently \"pnpm start:auth\" \"pnpm start:core\" \"pnpm start:doc\" \"pnpm start:gateway\"",
+    
+    "restart:auth": "pnpm build:auth && pnpm start:auth",
+    "restart:core": "pnpm build:core && pnpm start:core",
+    "restart:doc": "pnpm build:doc && pnpm start:doc",
+    "restart:gateway": "pnpm build:gateway && pnpm start:gateway",
+    
+    "prisma:generate": "pnpm --filter auth-service prisma generate && pnpm --filter core-service prisma generate && pnpm --filter document-service prisma generate",
+    
     "docker:build": "docker-compose build",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down"
   },
-  "keywords": [
-    "microservices",
-    "nestjs",
-    "legal-management"
-  ],
+  "keywords": ["microservices", "nestjs", "legal-management"],
   "author": "PRANATA",
   "license": "PRIVATE",
   "engines": {
@@ -29,14 +45,25 @@
     "@types/passport-jwt": "^4.0.1",
     "@typescript-eslint/eslint-plugin": "^6.13.0",
     "@typescript-eslint/parser": "^6.13.0",
+    "concurrently": "^8.2.2",
     "eslint": "^8.54.0",
     "prettier": "^3.1.0",
-    "typescript": "^5.3.0"
+    "prisma": "^6.18.0",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.3.3"
   },
-  "dependencies": {
-    "@nestjs/config": "^4.0.2",
-    "@nestjs/passport": "^11.0.5",
-    "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1"
-  }
+"dependencies": {
+  "@nestjs/common": "^11.1.8",
+  "@nestjs/core": "^11.0.1",
+  "@nestjs/platform-express": "^11.0.1",
+  "@nestjs/config": "^4.0.2",
+  "@nestjs/passport": "^11.0.5",
+  "@prisma/client": "^6.18.0",
+  "class-transformer": "^0.5.1",
+  "class-validator": "^0.14.2",
+  "passport": "^0.7.0",
+  "passport-jwt": "^4.0.1",
+  "reflect-metadata": "^0.2.2",
+  "rxjs": "^7.8.2"
+}
 }

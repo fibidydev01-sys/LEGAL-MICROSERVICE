@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  postgres-auth:
+    image: postgres:16-alpine
+    container_name: legal-postgres-auth
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: auth_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-auth-data:/var/lib/postgresql/data
+
+  postgres-core:
+    image: postgres:16-alpine
+    container_name: legal-postgres-core
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: core_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres-core-data:/var/lib/postgresql/data
+
+  postgres-document:
+    image: postgres:16-alpine
+    container_name: legal-postgres-document
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: document_db
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres-document-data:/var/lib/postgresql/data
+
+volumes:
+  postgres-auth-data:
+  postgres-core-data:
+  postgres-document-data:

@@ -5,72 +5,50 @@
   "monorepo": true,
   "root": "apps",
   "compilerOptions": {
-    "webpack": true,
-    "tsConfigPath": "apps/api-gateway/tsconfig.json"
+    "webpack": false
   },
   "projects": {
     "api-gateway": {
       "type": "application",
       "root": "apps/api-gateway",
       "entryFile": "main",
-      "sourceRoot": "apps/api-gateway/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/api-gateway/tsconfig.json"
-      }
+      "sourceRoot": "apps/api-gateway/src"
     },
     "auth-service": {
       "type": "application",
       "root": "apps/auth-service",
       "entryFile": "main",
-      "sourceRoot": "apps/auth-service/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/auth-service/tsconfig.json"
-      }
-    },
-    "common": {
-      "type": "library",
-      "root": "libs/common",
-      "entryFile": "index",
-      "sourceRoot": "libs/common/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/common/tsconfig.lib.json"
-      }
+      "sourceRoot": "apps/auth-service/src"
     },
     "core-service": {
       "type": "application",
       "root": "apps/core-service",
       "entryFile": "main",
-      "sourceRoot": "apps/core-service/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/core-service/tsconfig.json"
-      }
-    },
-    "database": {
-      "type": "library",
-      "root": "libs/database",
-      "entryFile": "index",
-      "sourceRoot": "libs/database/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/database/tsconfig.lib.json"
-      }
+      "sourceRoot": "apps/core-service/src"
     },
     "document-service": {
       "type": "application",
       "root": "apps/document-service",
       "entryFile": "main",
-      "sourceRoot": "apps/document-service/src",
-      "compilerOptions": {
-        "tsConfigPath": "apps/document-service/tsconfig.json"
-      }
+      "sourceRoot": "apps/document-service/src"
+    },
+    "common": {
+      "type": "library",
+      "root": "libs/common",
+      "entryFile": "index",
+      "sourceRoot": "libs/common/src"
+    },
+    "database": {
+      "type": "library",
+      "root": "libs/database",
+      "entryFile": "index",
+      "sourceRoot": "libs/database/src"
     },
     "events": {
       "type": "library",
       "root": "libs/events",
       "entryFile": "index",
-      "sourceRoot": "libs/events/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/events/tsconfig.lib.json"
-      }
+      "sourceRoot": "libs/events/src"
     }
   }
 }

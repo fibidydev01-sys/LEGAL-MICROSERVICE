@@ -17,34 +17,16 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
     "paths": {
-      "@app/common": [
-        "libs/common/src"
-      ],
-      "@app/database": [
-        "libs/database/src"
-      ],
-      "@app/events": [
-        "libs/events/src"
-      ],
-      "app/common": [
-        "libs/common/src"
-      ],
-      "app/common/*": [
-        "libs/common/src/*"
-      ],
-      "app/database": [
-        "libs/database/src"
-      ],
-      "app/database/*": [
-        "libs/database/src/*"
-      ],
-      "app/events": [
-        "libs/events/src"
-      ],
-      "app/events/*": [
-        "libs/events/src/*"
-      ]
+      "@app/common": ["libs/common/src"],
+      "@app/common/*": ["libs/common/src/*"],
+      "@app/database": ["libs/database/src"],
+      "@app/database/*": ["libs/database/src/*"],
+      "@app/events": ["libs/events/src"],
+      "@app/events/*": ["libs/events/src/*"]
     }
-  }
+  },
+  "exclude": ["node_modules", "dist"]
 }

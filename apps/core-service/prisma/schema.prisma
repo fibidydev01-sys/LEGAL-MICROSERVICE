@@ -1,0 +1,257 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client-core"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("CORE_DATABASE_URL")
+  directUrl = env("CORE_DIRECT_URL")
+}
+
+// ============================================
+// CLIENT MANAGEMENT
+// ============================================
+
+model Klien {
+  id                  String   @id @default(uuid())
+  nama_lengkap        String
+  jenis_klien         JenisKlien
+  nama_perusahaan     String?
+  email               String?
+  telepon             String?
+  alamat              String?
+  npwp                String?
+  nik                 String?
+  tanggal_daftar      DateTime @default(now())
+  status              StatusKlien @default(aktif)
+  
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+  
+  perkara             Perkara[]
+  akses_portal        AksesPortalKlien?
+
+  @@index([email])
+  @@index([telepon])
+  @@map("klien")
+}
+
+// ============================================
+// CASE MANAGEMENT
+// ============================================
+
+model Perkara {
+  id                  String   @id @default(uuid())
+  nomor_perkara       String   @unique
+  jenis_perkara       JenisPerkara
+  judul               String
+  deskripsi           String?
+  klien_id            String
+  lawan_pihak         String?
+  nilai_perkara       Float?
+  status_perkara      StatusPerkara @default(intake)
+  
+  tanggal_masuk       DateTime @default(now())
+  tanggal_mulai       DateTime?
+  tanggal_selesai     DateTime?
+  
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+  
+  klien               Klien @relation(fields: [klien_id], references: [id])
+  tim_perkara         TimPerkara[]
+  jadwal_sidang       JadwalSidang[]
+  tugas               Tugas[]
+  catatan             CatatanPerkara[]
+  log_aktivitas       LogAktivitas[]
+
+  @@index([klien_id])
+  @@index([nomor_perkara])
+  @@index([status_perkara])
+  @@map("perkara")
+}
+
+// ============================================
+// HEARING SCHEDULE
+// ============================================
+
+model JadwalSidang {
+  id                  String   @id @default(uuid())
+  perkara_id          String
+  jenis_sidang        String
+  tanggal_sidang      DateTime
+  waktu_sidang        String?
+  tempat_sidang       String?
+  agenda              String?
+  hasil_sidang        String?
+  catatan             String?
+  
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+  
+  perkara             Perkara @relation(fields: [perkara_id], references: [id], onDelete: Cascade)
+
+  @@index([perkara_id])
+  @@index([tanggal_sidang])
+  @@map("jadwal_sidang")
+}
+
+// ============================================
+// TASK MANAGEMENT
+// ============================================
+
+model Tugas {
+  id                  String   @id @default(uuid())
+  perkara_id          String
+  judul               String
+  deskripsi           String?
+  assigned_to         String?
+  prioritas           Prioritas @default(sedang)
+  status              StatusTugas @default(belum_mulai)
+  deadline            DateTime?
+  tanggal_selesai     DateTime?
+  
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+  
+  perkara             Perkara @relation(fields: [perkara_id], references: [id], onDelete: Cascade)
+
+  @@index([perkara_id])
+  @@index([assigned_to])
+  @@index([status])
+  @@map("tugas")
+}
+
+// ============================================
+// CASE TEAM
+// ============================================
+
+model TimPerkara {
+  id                  String   @id @default(uuid())
+  perkara_id          String
+  user_id             String
+  role_dalam_tim      String
+  tanggal_bergabung   DateTime @default(now())
+  
+  created_at          DateTime @default(now())
+  
+  perkara             Perkara @relation(fields: [perkara_id], references: [id], onDelete: Cascade)
+
+  @@unique([perkara_id, user_id])
+  @@index([perkara_id])
+  @@index([user_id])
+  @@map("tim_perkara")
+}
+
+// ============================================
+// CASE NOTES
+// ============================================
+
+model CatatanPerkara {
+  id                  String   @id @default(uuid())
+  perkara_id          String
+  isi_catatan         String
+  dibuat_oleh         String
+  
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+  
+  perkara             Perkara @relation(fields: [perkara_id], references: [id], onDelete: Cascade)
+
+  @@index([perkara_id])
+  @@map("catatan_perkara")
+}
+
+// ============================================
+// ACTIVITY LOG
+// ============================================
+
+model LogAktivitas {
+  id                  String   @id @default(uuid())
+  perkara_id          String?
+  user_id             String
+  aksi                String
+  deskripsi           String?
+  ip_address          String?
+  user_agent          String?
+  
+  created_at          DateTime @default(now())
+  
+  perkara             Perkara? @relation(fields: [perkara_id], references: [id], onDelete: Cascade)
+
+  @@index([perkara_id])
+  @@index([user_id])
+  @@index([created_at])
+  @@map("log_aktivitas")
+}
+
+// ============================================
+// CLIENT PORTAL ACCESS
+// ============================================
+
+model AksesPortalKlien {
+  id                  String   @id @default(uuid())
+  klien_id            String   @unique
+  username            String   @unique
+  password            String
+  is_active           Boolean  @default(true)
+  last_login          DateTime?
+  
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+  
+  klien               Klien @relation(fields: [klien_id], references: [id], onDelete: Cascade)
+
+  @@index([username])
+  @@map("akses_portal_klien")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum JenisKlien {
+  individu
+  perusahaan
+  organisasi
+}
+
+enum StatusKlien {
+  aktif
+  tidak_aktif
+  blacklist
+}
+
+enum JenisPerkara {
+  perdata
+  pidana
+  tata_usaha_negara
+  arbitrase
+  konsultasi
+  lainnya
+}
+
+enum StatusPerkara {
+  intake
+  dalam_proses
+  sidang
+  putusan
+  selesai
+  batal
+}
+
+enum Prioritas {
+  rendah
+  sedang
+  tinggi
+  urgent
+}
+
+enum StatusTugas {
+  belum_mulai
+  dalam_proses
+  selesai
+  ditunda
+  dibatalkan
+}

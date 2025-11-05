@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client-document"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DOCUMENT_DATABASE_URL")
+  directUrl = env("DOCUMENT_DIRECT_URL")
+}
+
+// ============================================
+// DOCUMENT MANAGEMENT
+// ============================================
+
+model DokumenHukum {
+  id                  String   @id @default(uuid())
+  perkara_id          String
+  nama_dokumen        String
+  kategori            KategoriDokumen
+  file_path           String
+  file_size           Int?
+  mime_type           String?
+  versi               Int      @default(1)
+  is_confidential     Boolean  @default(false)
+  
+  uploaded_by         String
+  tanggal_upload      DateTime @default(now())
+  
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+  
+  versi_dokumen       VersiDokumen[]
+
+  @@index([perkara_id])
+  @@index([kategori])
+  @@index([uploaded_by])
+  @@map("dokumen_hukum")
+}
+
+// ============================================
+// DOCUMENT VERSIONS
+// ============================================
+
+model VersiDokumen {
+  id                  String   @id @default(uuid())
+  dokumen_id          String
+  nomor_versi         Int
+  file_path           String
+  file_size           Int?
+  uploaded_by         String
+  keterangan          String?
+  
+  created_at          DateTime @default(now())
+  
+  dokumen             DokumenHukum @relation(fields: [dokumen_id], references: [id], onDelete: Cascade)
+
+  @@index([dokumen_id])
+  @@map("versi_dokumen")
+}
+
+// ============================================
+// ENUMS
+// ============================================
+
+enum KategoriDokumen {
+  surat_kuasa
+  gugatan
+  jawaban
+  replik
+  duplik
+  bukti
+  putusan
+  eksekusi
+  korespondensi
+  lainnya
+}
