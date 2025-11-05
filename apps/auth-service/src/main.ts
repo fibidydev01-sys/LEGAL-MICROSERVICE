@@ -5,6 +5,7 @@ import { AppModule } from './app.module';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  // Enable validation
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -13,12 +14,13 @@ async function bootstrap() {
     }),
   );
 
+  // Enable CORS
   app.enableCors({
     origin: process.env.CORS_ORIGIN?.split(',') || '*',
     credentials: true,
   });
 
-  const port = process.env.AUTH_SERVICE_PORT || 3001;
+  const port = process.env.PORT || 3001;
   await app.listen(port);
   
   console.log(`🚀 Auth Service running on: http://localhost:${port}`);

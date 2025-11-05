@@ -1,9 +1,6 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
-  output   = "../node_modules/.prisma/client-auth"
+  // JANGAN set output, biar default ke @prisma/client
 }
 
 datasource db {
@@ -11,10 +8,6 @@ datasource db {
   url       = env("AUTH_DATABASE_URL")
   directUrl = env("AUTH_DIRECT_URL")
 }
-
-// ============================================
-// USER MANAGEMENT
-// ============================================
 
 model User {
   id            String   @id @default(uuid())
@@ -51,10 +44,6 @@ model RefreshToken {
   @@index([token])
   @@map("refresh_tokens")
 }
-
-// ============================================
-// ENUMS
-// ============================================
 
 enum UserRole {
   admin
