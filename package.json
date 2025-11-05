@@ -1,0 +1,35 @@
+{
+  "name": "legal-microservices",
+  "version": "1.0.0",
+  "description": "Legal Management System - Microservices Architecture",
+  "private": true,
+  "scripts": {
+    "dev:gateway": "pnpm --filter api-gateway start:dev",
+    "dev:auth": "pnpm --filter auth-service start:dev",
+    "dev:core": "pnpm --filter core-service start:dev",
+    "dev:doc": "pnpm --filter document-service start:dev",
+    "build:all": "pnpm -r build",
+    "docker:build": "docker-compose build",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down"
+  },
+  "keywords": [
+    "microservices",
+    "nestjs",
+    "legal-management"
+  ],
+  "author": "PRANATA",
+  "license": "PRIVATE",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=8.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^6.13.0",
+    "@typescript-eslint/parser": "^6.13.0",
+    "eslint": "^8.54.0",
+    "prettier": "^3.1.0",
+    "typescript": "^5.3.0"
+  }
+}
